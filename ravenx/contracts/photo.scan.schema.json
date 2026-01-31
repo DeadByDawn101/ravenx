@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "photo.scan tool contract (RavenOS)",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": [
+        "mode",
+        "input"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "ocr",
+            "caption",
+            "classify",
+            "dedupe",
+            "skin"
+          ]
+        },
+        "input": {
+          "type": "object",
+          "oneOf": [
+            {
+              "required": [
+                "image_base64",
+                "mime"
+              ]
+            },
+            {
+              "required": [
+                "file_path"
+              ]
+            }
+          ],
+          "properties": {
+            "image_base64": {
+              "type": "string"
+            },
+            "mime": {
+              "type": "string"
+            },
+            "file_path": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "max_side": {
+              "type": "integer",
+              "minimum": 64,
+              "maximum": 8192
+            },
+            "language_hint": {
+              "type": "string"
+            },
+            "return_blocks": {
+              "type": "boolean"
+            },
+            "return_palette": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "ok",
+        "mode"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "label",
+              "score"
+            ]
+          }
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta": {
+          "type": "object"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "details": {}
+          },
+          "required": [
+            "code",
+            "message"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

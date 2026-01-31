@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RavenOS AgentPack Manifest",
+  "type": "object",
+  "required": [
+    "format",
+    "name",
+    "version",
+    "kind",
+    "contents"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "enum": [
+        "ravenos-agentpack@1"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "agent-pack",
+        "skill-pack",
+        "ui-extension",
+        "bundle"
+      ]
+    },
+    "publisher": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "boolean"
+        },
+        "filesystem": {
+          "type": "boolean"
+        },
+        "exec": {
+          "type": "boolean"
+        },
+        "camera": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "contents": {
+      "type": "object",
+      "properties": {
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ui": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "object",
+      "properties": {
+        "alg": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "sig": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "alg",
+        "keyId",
+        "sig"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

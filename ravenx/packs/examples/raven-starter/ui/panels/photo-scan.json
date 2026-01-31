@@ -1,0 +1,6 @@
+{
+  "id": "panel.photoScan",
+  "title": "Photo Scanner",
+  "route": "/photo-scan",
+  "icon": "camera"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "raven",
+  "displayName": "Raven",
+  "description": "RavenOS default agent (placeholder).",
+  "model": {
+    "provider": "openai",
+    "name": "gpt-4.1-mini"
+  },
+  "policy": {
+    "sandbox": "on",
+    "tools": {
+      "allow": [
+        "photo.scan"
+      ]
+    }
+  },
+  "style": {
+    "avatar": "assets/avatar.png",
+    "theme": {
+      "accent": "#6b5cff"
+    }
+  }
+}

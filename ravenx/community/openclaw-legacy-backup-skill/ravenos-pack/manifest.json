@@ -1,0 +1,24 @@
+{
+  "format": "ravenos-agentpack@1",
+  "name": "OpenClaw Legacy Backup Skill",
+  "version": "0.1.0",
+  "kind": "skill-pack",
+  "publisher": {
+    "name": "RavenOS Community"
+  },
+  "description": "Standalone backup/restore skill for OpenClaw legacy users.",
+  "permissions": {
+    "network": false,
+    "filesystem": false,
+    "exec": false,
+    "camera": false
+  },
+  "contents": {
+    "agents": [],
+    "skills": [
+      "skills/openclaw-legacy-backup-skill.md"
+    ],
+    "tools": [],
+    "ui": []
+  }
+}

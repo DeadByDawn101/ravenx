@@ -1,0 +1,24 @@
+{
+  "format": "ravenos-agentpack@1",
+  "name": "Image Generation Skill (HF)",
+  "version": "0.1.0",
+  "kind": "skill-pack",
+  "publisher": {
+    "name": "RavenOS"
+  },
+  "description": "Adds guidance for using image.generate to create images from prompts.",
+  "permissions": {
+    "network": true,
+    "filesystem": false,
+    "exec": false,
+    "camera": false
+  },
+  "contents": {
+    "agents": [],
+    "skills": [
+      "skills/image-gen-skill.md"
+    ],
+    "tools": [],
+    "ui": []
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "ravenos",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "sh -c 'pnpm -C apps/api dev & pnpm -C apps/ui dev; wait'",
+    "build": "pnpm -C apps/ui build",
+    "start:api": "pnpm -C apps/api start",
+    "start:ui": "pnpm -C apps/ui preview"
+  },
+  "workspaces": [
+    "apps/*"
+  ]
+}

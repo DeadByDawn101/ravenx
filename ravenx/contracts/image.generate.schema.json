@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "image.generate tool contract (RavenOS)",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": [
+        "prompt"
+      ],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "default": "Tongyi-MAI/Z-Image"
+        },
+        "size": {
+          "type": "string",
+          "enum": [
+            "512x512",
+            "768x768",
+            "1024x1024"
+          ],
+          "default": "1024x1024"
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 80
+        },
+        "guidance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "negative_prompt": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "png",
+            "jpeg",
+            "webp"
+          ],
+          "default": "png"
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "mime",
+              "data_base64"
+            ],
+            "properties": {
+              "mime": {
+                "type": "string"
+              },
+              "data_base64": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "meta": {
+          "type": "object"
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "details": {}
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

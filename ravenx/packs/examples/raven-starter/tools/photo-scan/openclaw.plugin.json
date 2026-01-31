@@ -1,0 +1,34 @@
+{
+  "id": "photo-scan",
+  "name": "Photo Scanner (RavenOS)",
+  "version": "0.1.0",
+  "entry": "./dist/index.js",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "hfToken": {
+        "type": "string",
+        "title": "Hugging Face Token"
+      },
+      "provider": {
+        "type": "string",
+        "enum": [
+          "hf-inference",
+          "local"
+        ],
+        "default": "hf-inference"
+      }
+    },
+    "required": []
+  },
+  "tools": [
+    {
+      "name": "photo.scan",
+      "description": "Scan an image for OCR/caption/tags/theme extraction.",
+      "schemaRef": "../../../contracts/photo.scan.schema.json"
+    }
+  ],
+  "skills": [
+    "../../skills/photo-scan-skill.md"
+  ]
+}

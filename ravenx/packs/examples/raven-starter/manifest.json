@@ -1,0 +1,30 @@
+{
+  "format": "ravenos-agentpack@1",
+  "name": "Raven Starter Agent",
+  "version": "0.1.0",
+  "kind": "agent-pack",
+  "publisher": {
+    "name": "RavenOS"
+  },
+  "description": "Example agent pack structure (placeholder).",
+  "permissions": {
+    "network": true,
+    "filesystem": false,
+    "exec": false,
+    "camera": false
+  },
+  "contents": {
+    "agents": [
+      "agents/raven/agent.json"
+    ],
+    "skills": [
+      "skills/photo-scan-skill.md"
+    ],
+    "tools": [
+      "tools/photo-scan/openclaw.plugin.json"
+    ],
+    "ui": [
+      "ui/panels/photo-scan.json"
+    ]
+  }
+}

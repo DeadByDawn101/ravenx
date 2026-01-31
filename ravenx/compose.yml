@@ -1,0 +1,33 @@
+services:
+  ui:
+    build:
+      context: .
+      dockerfile: ./apps/ui/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - RAVENOS_API_URL=http://api:8787
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    ports:
+      - "8787:8787"
+    environment:
+      - PORT=8787
+      - RAVENOS_GATEWAY_URL=${RAVENOS_GATEWAY_URL}
+      - RAVENOS_GATEWAY_TOKEN=${RAVENOS_GATEWAY_TOKEN}
+      - RAVENOS_MODE=${RAVENOS_MODE}
+    # For "baas" you can switch these to tmpfs/no volumes
+    volumes:
+      - ravenos_state:/var/lib/ravenos
+      - ravenos_packs:/var/lib/ravenos/packs
+      - ravenos_reports:/var/lib/ravenos/reports
+
+volumes:
+  ravenos_state:
+  ravenos_packs:
+  ravenos_reports:
