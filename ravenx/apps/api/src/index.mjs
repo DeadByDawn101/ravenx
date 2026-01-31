@@ -7,6 +7,8 @@ import { detectLegacyLayout, convertLegacyToManifest } from "./legacy.mjs";
 import { extractZipFiltered, safeIdFromManifest, sha256Hex, getOpenClawTargetsFromEnv, applyInstallToTargets } from "./installer.mjs";
 import fs from "fs/promises";
 import path from "path";
+import { createDeployment, listDeployments, stopDeployment, markLockedIfExpired } from "./factory.mjs";
+import { hashPassword, extendWithPassword, applyExtensionToken } from "./lease.mjs";
 
 const app = express();
 
@@ -270,6 +272,86 @@ app.get("/agentpacks/report/:id", async (req, res) => {
   const r = reports.get(req.params.id);
   if (!r) return res.status(404).json({ ok: false, error: { code: "NOT_FOUND", message: "Report not found" } });
   return res.json({ ok: true, report: r });
+});
+
+/**
+ * Agent Factory + Leases (Phase 1: password-only unlock)
+ */
+app.post("/api/factory/deploy", async (req, res) => {
+  try {
+    const { packId, agentId, ttlSeconds, password, maxExtendSeconds, wipeDelaySeconds, wipeOnExpire } = req.body || {};
+    if (!password || String(password).length < 6) return res.status(400).json({ error: "password_required_min6" });
+
+    const passwordHash = hashPassword(String(password));
+    const dep = await createDeployment({
+      packId,
+      agentId,
+      ttlSeconds: Number(ttlSeconds || 3600),
+      unlockPolicy: {
+        passwordHash,
+        maxExtendSeconds: Number(maxExtendSeconds || 86400),
+        wipeDelaySeconds: Number(wipeDelaySeconds || 600),
+        wipeOnExpire: wipeOnExpire !== false,
+      },
+    });
+    res.json({ ok: true, deployment: dep });
+  } catch (e) {
+    res.status(500).json({ error: String(e.message || e) });
+  }
+});
+
+app.get("/api/factory/list", async (_req, res) => {
+  try {
+    const deployments = await listDeployments();
+    res.json({ ok: true, deployments });
+  } catch (e) {
+    res.status(500).json({ error: String(e.message || e) });
+  }
+});
+
+app.post("/api/factory/lock", async (req, res) => {
+  try {
+    const { deploymentId } = req.body || {};
+    if (!deploymentId) return res.status(400).json({ error: "deploymentId_required" });
+    const dep = await markLockedIfExpired(deploymentId);
+    res.json({ ok: true, deployment: dep });
+  } catch (e) {
+    res.status(500).json({ error: String(e.message || e) });
+  }
+});
+
+app.post("/api/factory/stop", async (req, res) => {
+  try {
+    const { deploymentId, wipe } = req.body || {};
+    if (!deploymentId) return res.status(400).json({ error: "deploymentId_required" });
+    const dep = await stopDeployment({ deploymentId, wipe: Boolean(wipe) });
+    res.json({ ok: true, deployment: dep });
+  } catch (e) {
+    res.status(500).json({ error: String(e.message || e) });
+  }
+});
+
+app.post("/api/lease/extend/password", async (req, res) => {
+  try {
+    const { deploymentId, password, extendSeconds } = req.body || {};
+    if (!deploymentId) return res.status(400).json({ error: "deploymentId_required" });
+    if (!password) return res.status(400).json({ error: "password_required" });
+    const { token, approvedSeconds } = await extendWithPassword({ deploymentId, password, extendSeconds: Number(extendSeconds || 0) });
+    res.json({ ok: true, token, approvedSeconds });
+  } catch (e) {
+    res.status(400).json({ error: String(e.message || e) });
+  }
+});
+
+app.post("/api/lease/apply", async (req, res) => {
+  try {
+    const { token } = req.body || {};
+    if (!token) return res.status(400).json({ error: "token_required" });
+    const dep = await applyExtensionToken({ token });
+    res.json({ ok: true, deployment: dep });
+  } catch (e) {
+    res.status(400).json({ error: String(e.message || e) });
+  }
 });
 
 app.listen(PORT, () => {

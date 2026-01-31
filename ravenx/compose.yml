@@ -26,8 +26,20 @@ services:
       - ravenos_state:/var/lib/ravenos
       - ravenos_packs:/var/lib/ravenos/packs
       - ravenos_reports:/var/lib/ravenos/reports
+      - ravenos_workspaces:/var/lib/ravenos/workspaces
+
+lease_guard:
+  build:
+    context: .
+    dockerfile: ./apps/lease-guard/Dockerfile
+  environment:
+    - RAVENX_API_URL=http://api:8787
+    - POLL_INTERVAL_SECONDS=20
+  depends_on:
+    - api
 
 volumes:
   ravenos_state:
   ravenos_packs:
   ravenos_reports:
+  ravenos_workspaces:
